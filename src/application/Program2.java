@@ -5,6 +5,7 @@ import java.util.List;
 
 import dao.DaoFactory;
 import dao.DepartmentDao;
+import db.DB;
 import model.entities.Department;
 
 public class Program2 {
@@ -27,6 +28,19 @@ public class Program2 {
 		list = dd.findAll();
 		for(Department d : list)System.out.println(d.toString());
 
+		System.out.println("\n\n=========Test Insert =========");
+		Department dep2 = new Department(null,"Dev");
+		dd.insert(dep2);
+		
+		System.out.println("\n\n=========Test Update =========");
+		dep.setName("Compiuter");
+		dd.update(dep);
+		
+		System.out.println("\n\n=========Test deleteById =========");
+		dd.deleteById(12);
+		
+		DB.closeConnection();
+		
 	}
 
 }

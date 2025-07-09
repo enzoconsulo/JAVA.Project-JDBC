@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,19 +23,90 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public void insert(Department obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			pst = co.prepareStatement(
+					"insert into department "
+					+ "(Name) "
+					+ "values "
+					+ "(?);",Statement.RETURN_GENERATED_KEYS);
+			
+			pst.setString(1, obj.getName());
+			
+			int successInsert = pst.executeUpdate();
+			
+			if(successInsert > 0) {
+				System.out.println("Department: '" + obj.getName() +"' succesfully inserted!");
+				rs = pst.getGeneratedKeys();
+				if(rs.next()) {
+					obj.setId(rs.getInt(1));
+				}
+				
+			}else {
+				System.out.println("Insertion Failed !");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(pst);
+			DB.closeResultSet(rs);
+		}
 		
 	}
 
 	@Override
 	public void update(Department obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement pst = null;
+		
+		try {
+			pst = co.prepareStatement(
+					"UPDATE Department "
+					+ "SET Name = ? "
+					+ "WHERE Id = ?");
+			
+			pst.setString(1, obj.getName());
+			pst.setInt(2, obj.getId());
+			
+			int successUpdate = pst.executeUpdate();
+			
+			if(successUpdate > 0) {
+				System.out.println("Department: '" + obj.getName() +"' succesfully updated!");
+			}else {
+				System.out.println("Update Failed !");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(pst);
+		}
 		
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement pst = null;
+		
+		try {
+			pst = co.prepareStatement(
+					"delete from department "
+					+ "where Id = ?; ");
+			
+			pst.setInt(1, id);
+			
+			int successDelete = pst.executeUpdate();
+			
+			if(successDelete >0) {
+				System.out.println("Succesfull Deleted" );
+			}else {
+				System.out.println("Delete Failed !");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 		
 	}
 
