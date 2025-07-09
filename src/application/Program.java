@@ -12,16 +12,27 @@ public class Program {
 		
 		SellerDao sd = DaoFactory.createSellerDao();
 		
-		System.out.println("=========Test FindById =========\n\n");
-		Seller seller =  sd.findById(1);
-		System.out.println(seller.toString());
+		System.out.println("=========Test FindById =========");
+		int FindById_value = 7;
+		Seller seller =  sd.findById(FindById_value);
+		if(seller == null) {
+			System.out.println("Nenhum resultado encontrado com Id: "+FindById_value);
+		}else{
+			System.out.println(seller.toString());
+		};
 		
-		System.out.println("=========Test FindByDepartment =========\n\n");
-		List<Seller> list = sd.findByDepartment(1);
-		for(Seller s : list) {
-			System.out.println(s.toString());
-		}
+		
+		System.out.println("\n\n=========Test FindByDepartment =========");
+		int findByDepartment_value = 1;
+		List<Seller> list = sd.findByDepartment(findByDepartment_value);
+		if(list.isEmpty())System.out.println("Nenhum resultado encontrado com DepartmentId: "+findByDepartment_value);
+		for(Seller s : list) System.out.println(s.toString());
+		list.clear();
 
+		System.out.println("\n\n=========Test FindAll =========");
+		list = sd.findAll();
+		for(Seller s : list)System.out.println(s.toString());
+		
 		
 	}
 }

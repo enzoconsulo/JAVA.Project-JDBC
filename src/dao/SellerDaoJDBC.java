@@ -72,7 +72,38 @@ public class SellerDaoJDBC implements SellerDao{
 
 	@Override
 	public List<Seller> findAll() {
-		return null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		List<Seller> list = new ArrayList<>();
+		
+		try {
+			pst = co.prepareStatement(
+					"select seller.*,department.name as DepName "
+					+ "from seller inner join department "
+					+ "on DepartmentId = department.Id ");
+			
+			rs = pst.executeQuery();
+			
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while(rs.next()) {
+				
+				if(!map.containsKey(rs.getInt("DepartmentId"))) {
+					map.put(rs.getInt("DepartmentId"), instantiateDepartment(rs));
+					
+				}
+				
+				list.add(instantiateSeller(rs, map.get(rs.getInt("DepartmentId"))));	
+			}
+			
+			return list;
+	
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(pst);
+		}
 	}
 	
 	@Override
@@ -108,7 +139,10 @@ public class SellerDaoJDBC implements SellerDao{
 				
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
-			}		
+			}finally {
+				DB.closeResultSet(rs);
+				DB.closeStatement(pst);
+			}
 	}	
 	
 	private Seller instantiateSeller(ResultSet rs,Department dep) throws SQLException {
