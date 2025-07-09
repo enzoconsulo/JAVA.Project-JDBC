@@ -39,8 +39,11 @@ public class Program {
 		seller = new Seller(null,"teste","teste@gmail.com",new Date(),2000.0,new Department(1,"dev"));
 		sd.insert(seller);
 		
+		System.out.println("\n\n=========Test Update =========");
+		seller.setBaseSalary(3000.0);
+		sd.update(seller);
 		
-		
-		
+		System.out.println("\n\n=========Test deleteById =========");
+		sd.deleteById(21);
 	}
 }
