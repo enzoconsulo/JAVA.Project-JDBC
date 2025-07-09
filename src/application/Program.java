@@ -1,10 +1,12 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import dao.DaoFactory;
 import dao.SellerDao;
+import db.DB;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -13,6 +15,7 @@ public class Program {
 	public static void main(String[] args) {
 		
 		SellerDao sd = DaoFactory.createSellerDao();
+		List<Seller> list = new ArrayList<>();
 		
 		System.out.println("=========Test FindById =========");
 		int FindById_value = 4;
@@ -26,7 +29,7 @@ public class Program {
 		
 		System.out.println("\n\n=========Test FindByDepartment =========");
 		int findByDepartment_value = 1;
-		List<Seller> list = sd.findByDepartment(findByDepartment_value);
+		list = sd.findByDepartment(findByDepartment_value);
 		if(list.isEmpty())System.out.println("Nenhum resultado encontrado com DepartmentId: "+findByDepartment_value);
 		for(Seller s : list) System.out.println(s.toString());
 		list.clear();
@@ -45,5 +48,7 @@ public class Program {
 		
 		System.out.println("\n\n=========Test deleteById =========");
 		sd.deleteById(21);
+		
+		DB.closeConnection();
 	}
 }
